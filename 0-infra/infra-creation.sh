@@ -25,9 +25,16 @@ gcloud config set project $PROJECT_ID
 # creates global ip address for moodle ingress controller (google cloud load balancer)
 gcloud compute addresses create moodle-ingress-ip --global
 
-# enables networking services creation (if not enabled already)
-gcloud services enable servicenetworking.googleapis.com \
+# enable all google cloud necessaries apis on a new project
+
+gcloud services enable compute.googleapis.com \
+sqladmin.googleapis.com \
+redis.googleapis.com file.googleapis.com \
+cloudbuild.googleapis.com \
+artifactregistry.googleapis.com \
+servicenetworking.googleapis.com \
   --project=$PROJECT_ID
+  
 
 # creates a new VPC (if not exists yet)
 gcloud compute networks create $VPC_NAME \
@@ -222,9 +229,6 @@ gcloud filestore instances create $FILESTORE_NAME \
 
 # lists filestores available
 gcloud filestore instances list
-
-# enable artifact registry api if not enabled yet
-gcloud services enable artifactregistry.googleapis.com
 
 # create artifact registry repo for building Moodle images (you can skip it if you already have a repo for images)
 gcloud artifacts repositories create moodle-filestore \
